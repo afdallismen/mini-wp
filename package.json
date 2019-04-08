@@ -1,0 +1,26 @@
+{
+  "name": "mini-wp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "css-build": "node-sass --omit-source-map-url assets/sass/main.scss assets/css/main.css",
+    "css-watch": "npm run css-build -- --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/afdallismen/mini-wp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/afdallismen/mini-wp/issues"
+  },
+  "homepage": "https://github.com/afdallismen/mini-wp#readme",
+  "devDependencies": {
+    "bulma": "^0.7.4",
+    "node-sass": "^4.11.0"
+  }
+}
