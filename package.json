@@ -19,8 +19,10 @@
     "url": "https://github.com/afdallismen/mini-wp/issues"
   },
   "homepage": "https://github.com/afdallismen/mini-wp#readme",
-  "devDependencies": {
-    "bulma": "^0.7.4",
+  "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^12.0.0",
+    "@ckeditor/ckeditor5-vue": "^1.0.0-beta.1",
+    "buefy": "^0.7.3",
     "node-sass": "^4.11.0"
   }
 }

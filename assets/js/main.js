@@ -1,23 +1,12 @@
-$(document).ready(function () {
-  $('#article-create').hide()
-  $('#article-menu').hide()
-  $('a.menu-link').click(function () {
-    $(this).parent().get(0).classList.toggle('border-bottom')
-    $(this).find('i').get(0).classList.toggle('fa-angle-down')
-    $(this).find('i').get(0).classList.toggle('fa-angle-right')
-    $(`#${$(this).attr('data-target')}`).toggle()
-  })
-  $('.menu-list').find('a').each(function () {
-    $(this).click(function () {
-      $('.menu-list').find('a').removeClass('is-active')
-      $(this).get(0).classList.add('is-active')
-      $(`#${$(this).attr('data-target')}`).siblings().hide()
-      $(`#${$(this).attr('data-target')}`).show()
-    })
-  })
 
-  ClassicEditor
-    .create(document.querySelector('#editor'), {
+var app = new Vue({
+  el: '#app',
+  data: {
+    articles: [],
+    q: '',
+    article: {},
+    editor: ClassicEditor,
+    editorConfig: {
       heading: {
         options: [
           { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -30,8 +19,66 @@ $(document).ready(function () {
           { model: 'heading7', view: { name: 'p', classes: 'is-size-7' }, title: 'Heading 7', class: 'ck-heading_heading7' }
         ]
       }
-    })
-    .catch(error => {
-      console.error(error)
-    })
+    },
+    mainComponent: 'article-list'
+  },
+  components: {
+    ckeditor: CKEditor.component,
+  },
+  watch: {
+    q: function (val) {
+      if (this.q) {
+        axios.get(`http://localhost:3000/articles?q=${this.q}`)
+          .then(({ data }) => this.articles = data)
+          .catch(err => console.log(err))
+      } else {
+        axios.get(`http://localhost:3000/articles`)
+          .then(({ data }) => this.articles = data)
+          .catch(err => console.log(err))
+      }
+    }
+  },
+  created: function () {
+    axios.get('http://localhost:3000/articles')
+      .then(({ data }) => this.articles = data)
+      .catch(err => console.log(err))
+  },
+  methods: {
+    setMainComponent: function (component) {
+      if (component === 'article-create') {
+        this.resetArticle()
+      }
+      this.mainComponent = component
+    },
+    isActive: function (component) {
+      return this.mainComponent === component
+    },
+    createArticle: function () {
+      axios.post('http://localhost:3000/articles', { ...this.article, created_at: new Date() })
+        .then(article => {
+          this.articles.push(article)
+          this.resetArticle()
+          this.setMainComponent('article-list')
+        })
+        .catch(err => console.log(err))
+    },
+    articleDetail: function (article_id) {
+      this.article = this.articles.find(a => a.id === article_id)
+      this.setMainComponent('article-detail')
+    },
+    articleEdit: function (article_id) {
+      this.article = this.articles.find(a => a.id === article_id)
+      this.mainComponent = 'article-create'
+    },
+    deleteArticle: function (article_id) {
+      axios.delete(`http://localhost:3000/articles/${article_id}`)
+        .then(_ => {
+          this.articles = this.articles.filter(a => a.id !== article_id)
+        })
+        .catch(err => console.log(err))
+    },
+    resetArticle: function () {
+      this.article = {}
+    },
+  }
 })

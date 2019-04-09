@@ -10,120 +10,121 @@
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
-  <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
-    <div class="container">
-      <div class="navbar-brand">
-        <a class="navbar-item is-size-4" href="/">
-          MINI WP
-        </a>
-      </div>
-      <div class="navbar-menu is-hidden-mobile is-active">
-        <div class="navbar-start"></div>
-        <div class="navbar-end">
-          <a class="navbar-item">
-            <figure class="image mr1">
-              <img class="is-rounded" alt="profile-pict" src="https://avatars1.githubusercontent.com/u/11665082?s=400&u=3a5b90ba66e8f30c1409b159deb0c340ab206363&v=4">
-            </figure>
-            afdallismen
-          </a>
-          <a class="navbar-item">
-            <i class="fas fa-sign-out-alt"></i>
+  <div id="app" v-on:submit.prevent>
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+      <div class="container">
+        <div class="navbar-brand">
+          <a class="navbar-item is-size-4" href="#">
+            MINI WP
           </a>
         </div>
-      </div>
-    </div>
-  </nav>
-  <div class="container pt3">
-    <div class="columns is-variable is-6">
-      <div class="column is-3">
-        <aside class="menu box">
-          <p class="menu-label level p1 mb0">
-            <span class="level-left">Article</span>
-            <a class="menu-link" data-target="article-menu"><i class="fas fa-angle-down fa-lg level-right mr1" aria-hidden="true"></i></a>
-          </p>
-          <ul class="menu-list" id="article-menu">
-            <li><a data-target="article-list">List</a></li>
-            <li><a data-target="article-create">Create</a></li>
-          </ul>
-        </aside>
-      </div>
-      <div class="column">
-        <div id="article-list" class="box">
-          <div class="level">
-            <div class="level-left">
-              <!-- <p class="has-text-right has-text-grey"><span class="tag title is-warning is-medium">Article List</span></p> -->
-            </div>
-            <div class="level-right">
-              <div class="level-item field">
-                <p class="control has-icons-right">
-                  <input placeholder="Search article" type="text" class="input is-rounded has-icon-right is-fullwidth">
-                  <span class="icon is-right">
-                    <i class="fas fa-search"></i>
-                  </span>
-                </p>
-              </div>
-            </div>
+        <div class="navbar-menu is-hidden-mobile is-active">
+          <div class="navbar-start"></div>
+          <div class="navbar-end">
+            <a class="navbar-item">
+              <figure class="image mr1">
+                <img class="is-rounded" alt="profile-pict" src="https://avatars1.githubusercontent.com/u/11665082?s=400&u=3a5b90ba66e8f30c1409b159deb0c340ab206363&v=4">
+              </figure>
+              afdallismen
+            </a>
+            <a class="navbar-item">
+              <i class="fas fa-sign-out-alt"></i>
+            </a>
           </div>
-          <table class="table is-small is-fullwidth mt2">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Title</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Sweob oiweh oho wfehowiefoh iuiwueh owhfowoo</td>
-                <td>
-                  <div class="buttons is-right is-small">
-                    <a class="button is-white has-text-link"><i class="far fa-edit mr1"></i>Edit</a>
-                    <a class="button is-white has-text-danger"><i class="far fa-trash-alt mr1"></i>Delete</a>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Sweob oiweh oho wfehowiefoh iuiwueh owhfowoo</td>
-                <td>
-                  <div class="buttons is-right">
-                    <a class="button is-white has-text-link"><i class="far fa-edit mr1"></i>Edit</a>
-                    <a class="button is-white has-text-danger"><i class="far fa-trash-alt mr1"></i>Delete</a>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="pagination is-rounded is-centered" role="navigation" aria-label="pagination">
-            <ul class="pagination-list">
-              <a class="pagination-previous button is-light"><i class="fas fa-chevron-left"></i></a>
-              <a class="pagination-next button is-light"><i class="fas fa-chevron-right"></i></a>
+        </div>
+      </div>
+    </nav>
+    <div class="container pt3">
+      <div class="columns is-variable is-4">
+        <div class="column is-2">
+          <aside class="menu box">
+            <p class="menu-label has-text-weight-bold">
+              Article
+            </p>
+            <ul class="menu-list has-text-weight-light">
+              <li><a v-bind:class="{ 'is-active': isActive('article-list') }" v-on:click="setMainComponent('article-list')">List</a></li>
+              <li><a v-bind:class="{ 'is-active': isActive('article-create') }" v-on:click="setMainComponent('article-create')">Create</a></li>
             </ul>
-          </div>
+          </aside>
         </div>
-        <div id="article-create" class="box">
-          <form>
-            <div class="field">
-              <label class="label" for="title">Title</label>
-              <div class="control">
-                <input class="input" id="title" name="title" type="text">
+        <div class="column">
+          <div v-if="isActive('article-list')" class="box">
+            <div class="level">
+              <div class="level-left">
+                <!-- <p class="has-text-right has-text-grey"><span class="tag title is-warning is-medium">Article List</span></p> -->
+              </div>
+              <div class="level-right">
+                <div class="level-item field">
+                  <p class="control has-icons-right">
+                    <input placeholder="Search article by its title" v-model="q" type="text" class="input is-rounded has-icon-right">
+                    <span class="icon is-right">
+                      <i class="fas fa-search"></i>
+                    </span>
+                  </p>
+                </div>
               </div>
             </div>
-            <div class="field">
-              <label class="label" for="editor">Content</label>
-              <div class="control">
-                <textarea name="content" id="editor"></textarea>
+            <b-table :data="articles" :paginated="articles.length > 5" :pagination-simple="true">
+              <template slot-scope="props">
+                <b-table-column field="id" label="Id" width="40" numeric>
+                  {{ props.row.id }}
+                </b-table-column>
+                <b-table-column field="title" label="Title" width="470">
+                  <a v-on:click="articleDetail(props.row.id)">{{ props.row.title }}</a>
+                </b-table-column>
+                <b-table-column field="created_at" label="Created At" width="170">
+                  {{ props.row.created_at }}
+                </b-table-column>
+                <b-table-column label="" width="210">
+                  <div class="buttons is-right is-small">
+                    <a class="button is-white has-text-link" v-on:click="articleEdit(props.row.id)"><i class="far fa-edit mr1"></i>Edit</a>
+                    <a class="button is-white has-text-danger" v-on:click="deleteArticle(props.row.id)"><i class="far fa-trash-alt mr1"></i>Delete</a>
+                  </div>
+                </b-table-column>
+              </template>
+            </b-table>
+          </div>
+          <div v-if="isActive('article-create')" class="box">
+            <form>
+              <div class="field">
+                <label class="label" for="title">Title</label>
+                <div class="control">
+                  <input class="input" v-model="article.title" name="title" type="text" required>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label" for="editor">Content</label>
+                <div class="control">
+                  <ckeditor :editor="editor" :config="editorConfig" v-model="article.content" tag-name="textarea"></ckeditor>
+                </div>
+              </div>
+              <div class="buttons">
+                <button type="submit" class="button is-success" v-on:click="createArticle">Save</button>
+                <button type="submit" class="button is-white" v-on:click="resetArticle">Cancel</button>
+              </div>
+            </form>
+          </div>
+          <div v-if="isActive('article-detail')" class="box">
+            <div class="level">
+              <div class="level-left">
+                <p class="title">{{ article.title }}</p>
+              </div>
+              <div class="level-right">
+                <p class="tag is-medium">{{ article.created_at }}</p>
               </div>
             </div>
-            <button type="submit" class="button is-success">Save</button>
-          </form>
+            <hr>
+            <div class="mt3" v-html="article.content"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="./node_modules/buefy/dist/buefy.min.js"></script>
+  <script src="./node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js"></script>
+  <script src="./node_modules/@ckeditor/ckeditor5-vue/dist/ckeditor.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>
