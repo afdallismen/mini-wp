@@ -23,6 +23,9 @@
     "@ckeditor/ckeditor5-build-classic": "^12.0.0",
     "@ckeditor/ckeditor5-vue": "^1.0.0-beta.1",
     "buefy": "^0.7.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "mongoose": "^5.5.0",
     "node-sass": "^4.11.0"
   }
 }
