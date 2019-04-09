@@ -1,3 +1,6 @@
+var ax = axios.create({
+  baseURL: 'http://localhost:3000'
+})
 
 var app = new Vue({
   el: '#app',
@@ -27,20 +30,16 @@ var app = new Vue({
   },
   watch: {
     q: function (val) {
-      if (this.q) {
-        axios.get(`http://localhost:3000/articles?q=${this.q}`)
-          .then(({ data }) => this.articles = data)
-          .catch(err => console.log(err))
-      } else {
-        axios.get(`http://localhost:3000/articles`)
-          .then(({ data }) => this.articles = data)
-          .catch(err => console.log(err))
-      }
+      ax.get('/articles', { params: { title: this.q }})
+        .then(({ data }) => this.articles = data)
+        .catch(err => console.log(err))
     }
   },
   created: function () {
-    axios.get('http://localhost:3000/articles')
-      .then(({ data }) => this.articles = data)
+    ax.get('/articles')
+      .then(({ data }) => {
+        this.articles = data
+      })
       .catch(err => console.log(err))
   },
   methods: {
@@ -54,7 +53,7 @@ var app = new Vue({
       return this.mainComponent === component
     },
     createArticle: function () {
-      axios.post('http://localhost:3000/articles', { ...this.article, created_at: new Date() })
+      ax.post('/articles', this.article)
         .then(article => {
           this.articles.push(article)
           this.resetArticle()
@@ -63,17 +62,17 @@ var app = new Vue({
         .catch(err => console.log(err))
     },
     articleDetail: function (article_id) {
-      this.article = this.articles.find(a => a.id === article_id)
+      this.article = this.articles.find(a => a._id === article_id)
       this.setMainComponent('article-detail')
     },
     articleEdit: function (article_id) {
-      this.article = this.articles.find(a => a.id === article_id)
+      this.article = this.articles.find(a => a._id === article_id)
       this.mainComponent = 'article-create'
     },
     deleteArticle: function (article_id) {
-      axios.delete(`http://localhost:3000/articles/${article_id}`)
+      ax.delete(`/articles/${article_id}`)
         .then(_ => {
-          this.articles = this.articles.filter(a => a.id !== article_id)
+          this.articles = this.articles.filter(a => a._id !== article_id)
         })
         .catch(err => console.log(err))
     },
