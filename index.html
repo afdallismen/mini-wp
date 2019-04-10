@@ -97,11 +97,31 @@
             </section>
           </div>
           <div v-if="isActive('article-create')" class="box">
-            <form>
+            <form enctype="multipart/form-data">
               <div class="field">
                 <label class="label" for="title">Title</label>
                 <div class="control">
                   <input class="input" v-model="article.title" name="title" type="text" required>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Cover Image</label>
+                <img v-bind:src="imageUrl" alt="article cover image">
+                <div class="file has-name is-right is-fullwidth">
+                  <label class="file-label">
+                    <input class="file-input" type="file" ref="cover_img" v-on:change="coverChange()">
+                    <span class="file-cta">
+                      <span class="file-icon">
+                        <i class="fas fa-upload"></i>
+                      </span>
+                      <span class="file-label">
+                        Choose a file…
+                      </span>
+                    </span>
+                    <span class="file-name">
+                      {{ coverFilename }}
+                    </span>
+                  </label>
                 </div>
               </div>
               <div class="field">
@@ -111,7 +131,8 @@
                 </div>
               </div>
               <div class="buttons">
-                <button type="submit" class="button is-success" v-on:click="createArticle">Save</button>
+                <button type="submit" class="button is-success" v-if="article._id" v-on:click="editArticle">Edit</button>
+                <button type="submit" class="button is-success" v-if="!article._id" v-on:click="createArticle">Save</button>
                 <button type="submit" class="button is-white" v-on:click="resetArticle">Cancel</button>
               </div>
             </form>
@@ -125,6 +146,9 @@
                 <p class="tag is-medium">{{ article.created_at }}</p>
               </div>
             </div>
+            <figure class="image">
+              <img v-bind:src="imageUrl">
+            </figure>
             <hr>
             <div class="mt3" v-html="article.content"></div>
           </div>

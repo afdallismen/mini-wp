@@ -10,6 +10,7 @@ const PORT = 3000
 mongoose.connect('mongodb://localhost:27017/miniwp', { useNewUrlParser: true })
 
 app.use(cors())
+app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use('/', routes)

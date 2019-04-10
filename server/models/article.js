@@ -9,7 +9,8 @@ const articleSchema = mongoose.Schema({
   content: {
     type: String,
     required: 'Article content can\'t be empty'
-  }
+  },
+  cover_img: String
 }, {
   timestamps: { createdAt: 'created_at' }
 })

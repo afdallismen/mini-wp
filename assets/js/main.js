@@ -42,6 +42,18 @@ var app = new Vue({
       })
       .catch(err => console.log(err))
   },
+  computed: {
+    coverFilename: function () {
+      return this.article.cover_img ? this.article.cover_img : ''
+    },
+    imageUrl: function () {
+      if (this.article.cover_img) {
+        return 'http://localhost:3000/images/uploads/' + this.article.cover_img
+      } else {
+        return ''
+      }
+    }
+  },
   methods: {
     setMainComponent: function (component) {
       if (component === 'article-create') {
@@ -53,7 +65,16 @@ var app = new Vue({
       return this.mainComponent === component
     },
     createArticle: function () {
-      ax.post('/articles', this.article)
+      let formData = new FormData()
+      
+      Object.keys(this.article).forEach(key => formData.append(key, this.article[key]))
+      formData.append('cover_img_file', this.$refs.cover_img.files[0])
+
+      ax.post('/articles', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
         .then(article => {
           this.articles.push(article)
           this.resetArticle()
@@ -76,8 +97,31 @@ var app = new Vue({
         })
         .catch(err => console.log(err))
     },
+    editArticle: function () {
+      let formData = new FormData()
+
+      Object.keys(this.article).forEach(key => formData.append(key, this.article[key]))
+      
+      if (this.$refs.cover_img.files[0]) {
+        formData.append('cover_img_file', this.$refs.cover_img.files[0])
+      }
+
+      ax.put(`/articles/${this.article._id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+        .then(({ data }) => {
+          this.articles.splice(this.articles.findIndex(a => a._id === this.article_id), 1, data)
+          this.article = data
+          this.setMainComponent('article-list')
+        })
+    },
     resetArticle: function () {
       this.article = {}
     },
+    coverChange: function () {
+      this.article = { ...this.article, cover_img: this.$refs.cover_img.files[0].name }
+    }
   }
 })

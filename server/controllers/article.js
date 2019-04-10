@@ -25,7 +25,8 @@ class Article {
     models.Article
       .create({
         title: req.body.title,
-        content: req.body.content
+        content: req.body.content,
+        cover_img: req.file.filename
       })
       .then(createdArticle => res.status(201).json(createdArticle))
       .catch(err => res.status(500).json(err))
@@ -35,6 +36,7 @@ class Article {
     models.Article
       .findById(req.params.article_id)
       .then(article => {
+        article.cover_img = req.file.filename
         article.title = req.body.title
         article.content = req.body.content
         return article.save()
@@ -50,6 +52,11 @@ class Article {
         Object.keys(req.body).forEach(key => {
           article[key] = req.body[key]
         })
+        
+        if (req.file) {
+          article.cover_img = req.file.filename
+        }
+
         return article.save()
       })
       .then(editedArticle => res.status(200).json(editedArticle))
