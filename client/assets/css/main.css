@@ -1,0 +1,30 @@
+@import url("https://cdn.jsdelivr.net/npm/bulma-extensions@6.2.4/bulma-divider/dist/css/bulma-divider.min.css");
+@import "margin.css";
+@import "padding.css";
+
+#app {
+    min-height: 100vh;
+}
+
+.article .featured-image {
+    max-height: 300px;
+    overflow: hidden;
+}
+
+.article .file {
+    position: absolute;
+    bottom: 16px;
+    right: 20px;
+}
+
+.article > .control {
+    z-index: 1;
+    position: absolute;
+    top: 0px;
+    right: -48px;
+}
+
+.image-round {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/buefy@0.7.4/dist/buefy.min.css">
+  <link rel="stylesheet" href="./assets/css/main.css">
+</head>
+<body>
+  <div id="app" class="has-background-white-er">
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+      <div class="container">
+        <div class="navbar-brand">
+          <a class="navbar-item" @click="setMain('index')">
+            <p class="is-size-4 has-text-weight-bold">MiniWP</p>
+          </a>
+        </div>
+        <div class="navbar-start">
+          <template v-if="!isLoggedIn">
+            <a class="navbar-item" @click="setMain('login-form')" v-if=>Login</a>
+            <a class="navbar-item" @click="setMain('register-form')">Register</a>
+          </template>
+          <a class="navbar-item" v-else @click="setMain('index')">Dashboard</a>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="columns mt48 is-centered is-multiline" v-if="isIndex">
+        <main class="column">
+          <div v-for="article in articles">
+            <div class="columns is-variable is-8">
+              <div class="column is-3">
+                <figure class="image">
+                  <img :src="article.featured_image" alt="featured-image">
+                </figure>
+              </div>
+              <div class="column">
+                <p class="title is-size-3">{{ article.title }}</p>
+                <p class="subtitle is-size-6 has-text-grey-light">created by <span class="has-text-weight-semibold has-text-grey">afdallismen</span> at <span class="has-text-weight-semibold has-text-grey">{{ new Date(article.created_at).toLocaleDateString('id-ID') }}</span></p>
+                <div v-html="article.content"></div>
+              </div>
+            </div>
+            <div class="is-divider mb48 mt81"></div>
+          </div>
+        </main>
+      </div>
+      <div class="columns is-centered mt16" v-else-if="isLogin">
+        <div class="box">
+          <login-form @click-register="setMain('register-form')"></login-form>
+        </div>
+      </div>
+      <div class="columns is-centered mt16" v-else-if="isRegister">
+        <div class="box">
+          <register-form @click-login="setMain('login-form')"></register-form>
+        </div>
+      </div>
+      <div class="columns mt16" v-else>
+        <div class="column is-one-fifth">
+          <aside class="box menu pt16">
+            <p class="is-size-6 menu-label has-text-primary">
+              Dashboard
+            </p>
+            <div class="is-divider mt8 mb16"></div>
+            <ul class="menu-list">
+              <li>
+                <a @click="toggleMenu('articles')">
+                  Articles
+                  <b-icon
+                    class="is-pulled-right"
+                    icon="chevron-down"
+                    size="is-small">
+                  </b-icon>
+                </a>
+                <ul v-if="activeMenu.articles">
+                  <li><a @click="setMain('article-list')">List</a></li>
+                  <li><a @click="setMain('article-create')">Create</a></li>
+                </ul>
+              </li>
+              <li>
+                <a @click="toggleMenu('profile')">
+                  Profile
+                  <b-icon
+                    class="is-pulled-right"
+                    icon="chevron-down"
+                    size="is-small">
+                  </b-icon>
+                </a>
+                <ul v-if="activeMenu.profile">
+                  <li><a @click="setMain('profile-edit')">Edit</a></li>
+                  <li><a @click="setMain('profile-change-password')">Change Password</a></li>
+                </ul>
+              </li>
+              <li><a>Logout</a></li>
+            </ul>
+          </aside>
+        </div>
+        <div class="column">
+          <main class="box pt16">
+            <div class="menu">
+              <p class="is-size-6 menu-label has-text-primary" v-if="isArticle">
+                Articles
+              </p>
+              <p class="is-size-6 menu-label has-text-primary" v-else-if="isProfile">
+                Profile
+              </p>
+              <div class="is-divider mt8 mb0"></div>
+            </div>
+            <article-list
+              :articles="articles"
+              @detail-click="handleDetailClick"
+              v-if="isArticleList">
+            </article-list>
+            <article-create v-if="isArticleCreate"></article-create>
+            <article-detail
+              :article="article"
+              v-else-if="isArticleDetail">
+            </article-detail>
+            <user-edit-form v-else-if="isProfileEdit"></user-edit-form>
+            <change-password-form v-else-if="isProfileChangePassword"></change-password-form>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/axios@0.18.0/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/vue@2.6.10/dist/vue.common.dev.js"></script>
+  <script src="https://unpkg.com/buefy@0.7.4/dist/buefy.min.js"></script>
+  <script src="https://unpkg.com/vee-validate@2.2.2/dist/vee-validate.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-build-classic@12.1.0/build/ckeditor.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-vue@1.0.0-beta.1/dist/ckeditor.min.js"></script>
+
+
+  <script src="./assets/js/components/article/detail.js"></script>
+  <script src="./assets/js/components/article/list.js"></script>
+  <script src="./assets/js/components/article/create.js"></script>
+  <script src="./assets/js/components/user/change_password.js"></script>
+  <script src="./assets/js/components/user/edit.js"></script>
+  <script src="./assets/js/components/forms/auth_login.js"></script>
+  <script src="./assets/js/components/forms/auth_register.js"></script>
+  <script src="./assets/js/main.js"></script>
+</body>
+</html>
